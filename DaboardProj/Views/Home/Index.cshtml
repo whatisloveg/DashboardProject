@@ -140,7 +140,8 @@
                             labels: _chartLabels,
                             datasets: [{
                                 backgroundColor: barColor,
-                                data: _chartData
+                                data: _chartData,
+                                label: ' '
                             }]
                         },
                         options: {
@@ -152,7 +153,7 @@
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Соотношеия устройств'
+                                    text: 'Соотношения устройств'
                                 }
                             }
                         },
@@ -181,34 +182,23 @@
                                 data: {
                                     labels: _chartLabels,
                                     datasets: [{
-                                        data: _chartData
+                                        data: _chartData,
+                                        label: ' '
                                     }]
                                 },
                                 options: {
                                     responsive: true,
-                                    scales: {
-                                        x: {
-                                            border: {
-                                                display: BORDER
-                                            },
-                                            grid: {
-                                                display: DISPLAY,
-                                                drawOnChartArea: CHART_AREA,
-                                                drawTicks: TICKS,
-                                            }
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'right',
                                         },
-                                        y: {
-                                            border: {
-                                                display: false
-                                            },
-                                            grid: {
-                                                display: DISPLAY,
-                                                drawOnChartArea: CHART_AREA,
-                                                drawTicks: TICKS,
-                                            },
+                                        title: {
+                                            display: true,
+                                            text: 'Общее количество пользователей'
                                         }
                                     }
-                                }
+                                },
                             });
                         };
                     });
@@ -238,34 +228,23 @@
                                         fill: true,
                                         borderColor: 'rgb(255, 255, 255)',
                                         backgroundColor: 'rgba(250,250,250,1)',
-                                        tension: 0.4
+                                        tension: 0.4,
+                                            label: ' '
                                     }]
                                 },
                                 options: {
                                     responsive: true,
-                                    scales: {
-                                        x: {
-                                            border: {
-                                                display: BORDER
-                                            },
-                                            grid: {
-                                                display: DISPLAY,
-                                                drawOnChartArea: CHART_AREA,
-                                                drawTicks: TICKS,
-                                            }
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'right',
                                         },
-                                        y: {
-                                            border: {
-                                                display: false
-                                            },
-                                            grid: {
-                                                display: DISPLAY,
-                                                drawOnChartArea: CHART_AREA,
-                                                drawTicks: TICKS,
-                                            },
+                                        title: {
+                                            display: true,
+                                            text: 'Среднее время на сайте в минутах'
                                         }
                                     }
-                                }
+                                },
                             });
                         };
                     });
@@ -294,34 +273,24 @@
                                         fill: true,
                                         borderColor: 'rgb(255, 255, 255)',
                                         backgroundColor: 'rgba(250,250,250,1)',
-                                        tension: 0.4
+                                        tension: 0.4,
+                                        label: ' '
                                     }]
                                 },
                                 options: {
                                     responsive: true,
-                                    scales: {
-                                        x: {
-                                            border: {
-                                                display: BORDER
-                                            },
-                                            grid: {
-                                                display: DISPLAY,
-                                                drawOnChartArea: CHART_AREA,
-                                                drawTicks: TICKS,
-                                            }
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'right',
+                                            
                                         },
-                                        y: {
-                                            border: {
-                                                display: false
-                                            },
-                                            grid: {
-                                                display: DISPLAY,
-                                                drawOnChartArea: CHART_AREA,
-                                                drawTicks: TICKS,
-                                            },
+                                        title: {
+                                            display: true,
+                                            text: 'Количество новых посетителей'
                                         }
                                     }
-                                }
+                                },
                             });
                         };
                     });
@@ -353,10 +322,12 @@
                             labels: _chartLabels,
                             datasets: [{
                                 data: _chartData,
-                                 borderColor: "white",
+                                borderColor: "white",
+                                label: ' '
                             }]
                         },
                         options: {
+
                             responsive: true,
                             maintainAspectRatio: false,
                             backgroundColor: "blue",
@@ -373,8 +344,6 @@
                                     gridLines: {
                                         display: false // Скрываем сетку по оси y
                                     },
-                                    min: 6000,
-                                    max: 14000
                                 }
                             },
                             elements: {
@@ -383,7 +352,11 @@
                                 }
                             },
                             plugins: {
+                               
                                 title: {
+                                    legend: {
+                                        position: 'right',
+                                    },
                                     display: true,
                                     text: "Статистика количества пользователей",
                                     position: "top",
@@ -401,7 +374,7 @@
        
             
     }
-    setInterval(fetchData, 5000);
+    setInterval(fetchData, 500);
 </script>
 
 
