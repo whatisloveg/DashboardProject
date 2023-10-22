@@ -4,18 +4,108 @@
 
 }
 
-<div class="text-center">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/site.css">
+    <title>hackathon_project</title>
+</head>
+<body>
+    <header>
+        <h1>Быстрые отчеты</h1>
+        <div>
+            <div>
+                <a href="#">
+                    <img src="~/lib/img//blocks.png">
+                </a>
+            </div>
+            <div>
+                <a href="#">
+                    <img src="~/lib/img//settings.png">
+                </a>
+            </div>
+            <div>
+                <a href="#">
+                    <img src="~/lib/img//account.png">
+                </a>
+            </div>
+            <div>
+                <a href="#">
+                    <img src="~/lib/img//reminder.png">
+                </a>
+            </div>
+        </div>
+        <div class="crutch"></div>
+    </header>
+    <div class="content">
+        <div class="content-header">
+            <div class="range">
+                <div><a href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "year"})">Год</a></div>
+                <div><a href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "month"})">Месяц</a></div>
+                <div><a href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "week"})">Неделя</a></div>
+                <div><a href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "day"})">День</a></div>
+            </div>
+            <a href="#" id="settings"><img src="~/lib/img//settings.png"></a>
+        </div>
+        <div class="information">
+            <div class="chartLineAllUsers">
+
+                <canvas id="timeSpanLineChart" style="max-width:500px; max-height:300px">
+                </canvas>
+            </div>
+            <div class="chartLineNewUsers">
+                <canvas id="mainLineChart" style="max-width:500px; max-height:300px"></canvas>
+
+            </div>
+            <div class="chartLineAverageTime">
+                <canvas id="newVisitersLineChart" style="max-width:500px; max-height:300px"></canvas>
+            </div>
+            <div class="chartPieDevices">
+                <canvas id="pieChart" ></canvas>
+            </div>
+            <div class="chartLineStaticCountUsers">
+                <canvas id="chartLineStaticCountUsers"></canvas>
+            </div>
+            <div class="addChart">
+                <img src="~/lib/img//plus_info.png">
+            </div>
+
+        </div>
+    </div>
+    <footer>
+        <div class="up-menu">
+            <h1>Панели</h1>
+            <a href="#">Анализ сайта</a>
+            <a href="#">Анализ финансов</a>
+            <a href="#">Анализ акций</a>
+        </div>
+        <div class="down-menu">
+            <a href="#"><img src="~/lib/img//plus.png"></a>
+            <a href="#"><img src="~/lib/img//plus.png"></a>
+            <a href="#"><img src="~/lib/img/plus.png"></a>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="~/css/site.css"></script>
+</body>
+
+@*<div class="text-center">
     <div class="row">
         <h3 id="total">Bar Chart</h3>
         <a href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "month"})">Month</a>
         <a  href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "week"})">Week</a>
-        <canvas id="barChart" style="max-width:500px; max-height:300px"></canvas>
         <canvas id="pieChart" style="max-width:500px; max-height:300px"></canvas>
-        <canvas id="lineChart" style="max-width:500px; max-height:300px"></canvas>
+        <canvas id="mainLineChart" style="max-width:500px; max-height:300px"></canvas>
+        <canvas id="timeSpanLineChart" style="max-width:500px; max-height:300px"></canvas>
+        <canvas id="newVisitersLineChart" style="max-width:500px; max-height:300px"></canvas>
         <h2>@ViewData["Period"]</h2>
     </div>
 </div>
-
+*@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -23,9 +113,11 @@
 
 
 <script>
-    var myBarChart = null;
     var myDoughnutChart = null;
-    var myLineChart = null;
+    var mainLineChart = null;
+    var timeSpanLineChart = null;
+    var newVisitersLineChart = null;
+    var chartLineStaticCountUsers = null;
     function fetchData(dataPeriod) {
         fetch('/Home/GetDoughnutData?period=@ViewData["Period"]')
             .then(response => response.json())
@@ -33,25 +125,15 @@
                 var _data = data;
                 var _chartLabels = _data[0];
                 var _chartData = _data[1];
-                var barColor = ["red", "green", "blue"];
+                var barColor = ["#61B8DB", "#61B8DB", "#1F50DF"];
 
                 // Если у нас уже есть экземпляр графика, обновляем его данные
-                if (myBarChart) {
-                    myBarChart.data.labels = _chartLabels;
-                    myBarChart.data.datasets[0].data = _chartData;
-                    myBarChart.update();
+                if (myDoughnutChart) {
+                    myDoughnutChart.data.labels = _chartLabels;
+                    myDoughnutChart.data.datasets[0].data = _chartData;
+                    myDoughnutChart.update();
                 } else {
-                    // Если экземпляра графика нет, создаем его
-                    myBarChart = new Chart("barChart", {
-                        type: "bar",
-                        data: {
-                            labels: _chartLabels,
-                            datasets: [{
-                                backgroundColor: barColor,
-                                data: _chartData
-                            }]
-                        }
-                    });
+
                     myDoughnutChart = new Chart("pieChart", {
                         type: "doughnut",
                         data: {
@@ -60,65 +142,266 @@
                                 backgroundColor: barColor,
                                 data: _chartData
                             }]
-                        }
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Соотношеия устройств'
+                                }
+                            }
+                        },
                     });
-                    myLineChart = new Chart("lineChart", {
-                        type: "line",
-                        data: {
-                            labels: _chartLabels,
-                            datasets: [{
-                                backgroundColor: barColor,
-                                data: _chartData
-                            }]
-                        }
-                    });
+                
                 };
+                //общий line чарт
+                fetch('/Home/TotalUsers?period=@ViewData["Period"]')
+                    .then(response => response.json())
+                    .then(data => {
+                        var _data = data;
+                        var _chartLabels = _data[0];
+                        var _chartData = _data[1];
 
-              
-                //// После успешного запроса данных, выполните запрос для получения общего количества пользователей
-                //fetch('/Home/TotalUsers')
-                //    .then(response => response.json())
-                //    .then(totalUsers => {
-                //        // Обновите содержимое элемента <h3 id="total"> с полученным значением totalUsers
-                //        var totalElement = document.getElementById('total');
-                //        totalElement.textContent = 'Total Users: ' + totalUsers;
-                //    })
-                //    .catch(error => {
-                //        console.error('Ошибка при запросе общего количества пользователей: ' + error);
-                //    });
+                        if (mainLineChart) {
+                            mainLineChart.data.labels = _chartLabels;
+                            mainLineChart.data.datasets[0].data = _chartData;
+                            mainLineChart.update();
+                        } else {
+                            const DISPLAY = true;
+                            const BORDER = true;
+                            const CHART_AREA = false;
+                            const TICKS = true;
+                            mainLineChart = new Chart("mainLineChart", {
+                                type: "line",
+                                data: {
+                                    labels: _chartLabels,
+                                    datasets: [{
+                                        data: _chartData
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: {
+                                            border: {
+                                                display: BORDER
+                                            },
+                                            grid: {
+                                                display: DISPLAY,
+                                                drawOnChartArea: CHART_AREA,
+                                                drawTicks: TICKS,
+                                            }
+                                        },
+                                        y: {
+                                            border: {
+                                                display: false
+                                            },
+                                            grid: {
+                                                display: DISPLAY,
+                                                drawOnChartArea: CHART_AREA,
+                                                drawTicks: TICKS,
+                                            },
+                                        }
+                                    }
+                                }
+                            });
+                        };
+                    });
+                
+                fetch('/Home/AverageUserTimeOnSite?period=@ViewData["Period"]')
+                    .then(response => response.json())
+                    .then(data => {
+                        var _data = data;
+                        var _chartLabels = _data[0];
+                        var _chartData = _data[1];
+
+                        if (timeSpanLineChart) {
+                            timeSpanLineChart.data.labels = _chartLabels;
+                            timeSpanLineChart.data.datasets[0].data = _chartData;
+                            timeSpanLineChart.update();
+                        } else {
+                            const DISPLAY = true;
+                            const BORDER = true;
+                            const CHART_AREA = false;
+                            const TICKS = true;
+                            timeSpanLineChart = new Chart("timeSpanLineChart", {
+                                type: "line",
+                                data: {
+                                    labels: _chartLabels,
+                                    datasets: [{
+                                        data: _chartData,
+                                        fill: true,
+                                        borderColor: 'rgb(255, 255, 255)',
+                                        backgroundColor: 'rgba(250,250,250,1)',
+                                        tension: 0.4
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: {
+                                            border: {
+                                                display: BORDER
+                                            },
+                                            grid: {
+                                                display: DISPLAY,
+                                                drawOnChartArea: CHART_AREA,
+                                                drawTicks: TICKS,
+                                            }
+                                        },
+                                        y: {
+                                            border: {
+                                                display: false
+                                            },
+                                            grid: {
+                                                display: DISPLAY,
+                                                drawOnChartArea: CHART_AREA,
+                                                drawTicks: TICKS,
+                                            },
+                                        }
+                                    }
+                                }
+                            });
+                        };
+                    });
+                fetch('/Home/NewVisiters?period=@ViewData["Period"]')
+                    .then(response => response.json())
+                    .then(data => {
+                        var _data = data;
+                        var _chartLabels = _data[0];
+                        var _chartData = _data[1];
+
+                        if (newVisitersLineChart) {
+                            newVisitersLineChart.data.labels = _chartLabels;
+                            newVisitersLineChart.data.datasets[0].data = _chartData;
+                            newVisitersLineChart.update();
+                        } else {
+                            const DISPLAY = true;
+                            const BORDER = true;
+                            const CHART_AREA = false;
+                            const TICKS = true;
+                            newVisitersLineChart = new Chart("newVisitersLineChart", {
+                                type: "line",
+                                data: {
+                                    labels: _chartLabels,
+                                    datasets: [{
+                                        data: _chartData,
+                                        fill: true,
+                                        borderColor: 'rgb(255, 255, 255)',
+                                        backgroundColor: 'rgba(250,250,250,1)',
+                                        tension: 0.4
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: {
+                                            border: {
+                                                display: BORDER
+                                            },
+                                            grid: {
+                                                display: DISPLAY,
+                                                drawOnChartArea: CHART_AREA,
+                                                drawTicks: TICKS,
+                                            }
+                                        },
+                                        y: {
+                                            border: {
+                                                display: false
+                                            },
+                                            grid: {
+                                                display: DISPLAY,
+                                                drawOnChartArea: CHART_AREA,
+                                                drawTicks: TICKS,
+                                            },
+                                        }
+                                    }
+                                }
+                            });
+                        };
+                    });
+             
             })
             .catch(error => {
                 console.error('Ошибка при запросе данных: ' + error);
             });
 
+        fetch('/Home/TotalUsers2?period=@ViewData["Period"]')
+            .then(response => response.json())
+            .then(data => {
+                var _data = data;
+                var _chartLabels = _data[0];
+                var _chartData = _data[1];
+
+                if (chartLineStaticCountUsers) {
+                    chartLineStaticCountUsers.data.labels = _chartLabels;
+                    chartLineStaticCountUsers.data.datasets[0].data = _chartData;
+                    chartLineStaticCountUsers.update();
+                } else {
+                    const DISPLAY = true;
+                    const BORDER = true;
+                    const CHART_AREA = false;
+                    const TICKS = true;
+                    chartLineStaticCountUsers = new Chart("chartLineStaticCountUsers", {
+                        type: "line",
+                        data: {
+                            labels: _chartLabels,
+                            datasets: [{
+                                data: _chartData,
+                                 borderColor: "white",
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            backgroundColor: "blue",
+                            borderLeftColor: "white",
+                            borderRightColor: "white",
+                            borderWidth: 2,
+                            scales: {
+                                x: {
+                                    gridLines: {
+                                        display: false // Скрываем сетку по оси x
+                                    }
+                                },
+                                y: {
+                                    gridLines: {
+                                        display: false // Скрываем сетку по оси y
+                                    },
+                                    min: 6000,
+                                    max: 14000
+                                }
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0.4 // коэффициент натяжения кривой
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Статистика количества пользователей",
+                                    position: "top",
+                                    align: "start",
+                                    color: "white",
+                                    font: {
+                                        color: "white"
+                                    }
+                                }
+                            }
+                        }
+                    });
+                };
+            });
+       
             
     }
     setInterval(fetchData, 5000);
 </script>
 
 
-@*<script type="text/javascript">
-    $(function(){
-        $("#ID").click(function(){
-            $.ajax({
-                type:"POST",
-                url: "/Home/GetDoughnutData",
-                data:"",
-                contentType:"application/json; charset=utf-8",
-                dataType:"json",
-                success: OnSuccessResult,
-                error: OnError
-            });
-
-            function OnSuccessResult(data) {
-                console.log(data);
-
-
-            }
-
-            function OnError(err){
-                console.error("Ошибка при выполнении запроса:", err);
-            }
-        });
-    });
-</script>*@

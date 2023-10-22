@@ -1,18 +1,283 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
+@import url('https://fonts.cdnfonts.com/css/nunito-sans');
 
 body {
-  margin-bottom: 60px;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background-color: #0a1218;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 10%;
+}
+
+header h1 {
+    margin: 30px 10px;
+    font-size: 20px;
+    text-align-last: right;
+}
+
+header img {
+    height: 35px;
+    width: 35px;
+    margin: 20px;
+}
+
+header a {
+    position: relative;
+    z-index: 1;
+}
+
+header a::after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 50px;
+    height: 50px;
+    background-color: #d8193f;
+    box-shadow: 0 0 20px #d8193f;
+    border-radius: 10%;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+}
+
+header a:hover::after {
+    opacity: 1;
+}
+
+.content {
+    width: 75%;
+    height: max-content;
+    background-color: #121a25;
+    border-radius: 50px;
+    padding: 0 0 50px 0;
+}
+
+.content-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.content-header .range {
+    display: flex;
+    flex-direction: row;
+    margin: 0px 0px 0px 20px;
+}
+
+.content-header .range div {
+    text-align: center;
+    padding: 3px;
+    margin: 30px 3px;
+    width: 90px;
+    border-radius: 10px;
+    transition: 0.3s linear;
+}
+
+.content-header .range div:hover {
+    background-color: rgb(57, 57, 252);
+    box-shadow: 0 0 20px rgb(101, 101, 242);
+}
+
+.content-header a {
+    color: white;
+}
+
+.content-header img {
+    height: 40px;
+    width: 40px;
+    transition: 0.3s linear;
+
+}
+
+.content-header #settings img{
+    margin: 30px 30px 10px 0px;
+}
+
+.content-header img:hover {
+    height: 45px;
+    width: 45px;
+}
+
+/*  */
+
+.chartLineAllUsers {
+    position: relative;
+}
+
+    .chartLineAllUsers > div {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: blue;
+        float: right;
+        margin: 10%;
+        font-size: 250%;
+    }
+
+.information {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 0px 40px;
+}
+
+.information > div {
+    border-radius: 10px;
+    width: 30%;
+    padding-bottom: 10px;
+    height: 120px;
+    transition: 0.3s linear;
+    background-color: #1A2430;
+}
+
+.information > div:hover {
+    box-shadow: 0 0 20px rgb(86, 247, 247);
+}
+
+.information > .chartLineStaticCountUsers{
+    width: 100%;
+    height: 200px;
+    background-color: unset;
+}
+
+.information > .addChart {
+    background-color: #1A2430;
+    position: relative;
+}
+
+.addChart img {
+    width: 30px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/*  */
+
+footer {
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 15%;
+}
+
+footer .up-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer .up-menu a{
+    color: #373C40;
+    padding: 10px 0px;
+    transition: 0.4s linear;
+    text-align: center;
+    width: 150%;
+    border-radius: 10px;
+}
+
+footer .up-menu a:hover{
+    color: white;
+    background-color: #FE0032;
+    font-size: 105%;
+    box-shadow: 0 0 20px #d8193f;
+}
+
+footer .down-menu img{
+    margin: 10px;
+}
+
+footer img {
+    height: 20px;
+    width: 20px;
+    transition: 0.3s linear;
+}
+
+footer img:hover {
+    height: 30px;
+    width: 30px;
+}
+
+@media screen and (max-width: 1000px) {
+    body {
+        flex-direction: column;
+    }
+
+    header {
+        flex-direction: column;
+        width: 95%;
+        margin: auto;
+    }
+
+    header > div {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .content {
+        width: 95%;
+        margin: auto;
+    }
+
+    .content-header {
+        justify-content: center;
+    }
+
+    .content-header #settings {
+        display: none;
+    }
+
+    .information {
+        flex-direction: column;
+    }
+    
+    .information > div {
+        width: 95%;
+        height: 200px;
+        margin: auto;
+    }
+
+    .information > .chartLineStaticCountUsers {
+        width: 95%;
+    }
+
+    footer {
+        width: 95%;
+        margin: auto;    
+    }
+
+    footer h1 {
+        display: none;
+    }
+
+    footer .up-menu {
+        flex-direction: row;
+    }
+
+    footer .up-menu a {
+        width: 200px;
+        margin: 10px;
+    }
+
+    footer img {
+        display: none;
+    }
 }

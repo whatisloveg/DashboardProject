@@ -6,5 +6,6 @@
         public string Platform { get; set; }
         public DateTime DateOfEntryOnSite { get; set; }
         public DateTime DateOfExitFromSite { get; set; }
+        public bool IsNewVisiter { get; set; }
     }
 }
