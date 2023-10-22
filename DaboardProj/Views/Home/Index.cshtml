@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    
+
+}
+
+<div class="text-center">
+    <div class="row">
+        <h3 id="total">Bar Chart</h3>
+        <a href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "month"})">Month</a>
+        <a  href="@Url.Action("ChangePeriod", "Home", new{ newPeriod = "week"})">Week</a>
+        <canvas id="barChart" style="max-width:500px; max-height:300px"></canvas>
+        <canvas id="pieChart" style="max-width:500px; max-height:300px"></canvas>
+        <canvas id="lineChart" style="max-width:500px; max-height:300px"></canvas>
+        <h2>@ViewData["Period"]</h2>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<script>
+    var myBarChart = null;
+    var myDoughnutChart = null;
+    var myLineChart = null;
+    function fetchData(dataPeriod) {
+        fetch('/Home/GetDoughnutData?period=@ViewData["Period"]')
+            .then(response => response.json())
+            .then(data => {
+                var _data = data;
+                var _chartLabels = _data[0];
+                var _chartData = _data[1];
+                var barColor = ["red", "green", "blue"];
+
+                // Если у нас уже есть экземпляр графика, обновляем его данные
+                if (myBarChart) {
+                    myBarChart.data.labels = _chartLabels;
+                    myBarChart.data.datasets[0].data = _chartData;
+                    myBarChart.update();
+                } else {
+                    // Если экземпляра графика нет, создаем его
+                    myBarChart = new Chart("barChart", {
+                        type: "bar",
+                        data: {
+                            labels: _chartLabels,
+                            datasets: [{
+                                backgroundColor: barColor,
+                                data: _chartData
+                            }]
+                        }
+                    });
+                    myDoughnutChart = new Chart("pieChart", {
+                        type: "doughnut",
+                        data: {
+                            labels: _chartLabels,
+                            datasets: [{
+                                backgroundColor: barColor,
+                                data: _chartData
+                            }]
+                        }
+                    });
+                    myLineChart = new Chart("lineChart", {
+                        type: "line",
+                        data: {
+                            labels: _chartLabels,
+                            datasets: [{
+                                backgroundColor: barColor,
+                                data: _chartData
+                            }]
+                        }
+                    });
+                };
+
+              
+                //// После успешного запроса данных, выполните запрос для получения общего количества пользователей
+                //fetch('/Home/TotalUsers')
+                //    .then(response => response.json())
+                //    .then(totalUsers => {
+                //        // Обновите содержимое элемента <h3 id="total"> с полученным значением totalUsers
+                //        var totalElement = document.getElementById('total');
+                //        totalElement.textContent = 'Total Users: ' + totalUsers;
+                //    })
+                //    .catch(error => {
+                //        console.error('Ошибка при запросе общего количества пользователей: ' + error);
+                //    });
+            })
+            .catch(error => {
+                console.error('Ошибка при запросе данных: ' + error);
+            });
+
+            
+    }
+    setInterval(fetchData, 5000);
+</script>
+
+
+@*<script type="text/javascript">
+    $(function(){
+        $("#ID").click(function(){
+            $.ajax({
+                type:"POST",
+                url: "/Home/GetDoughnutData",
+                data:"",
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+                success: OnSuccessResult,
+                error: OnError
+            });
+
+            function OnSuccessResult(data) {
+                console.log(data);
+
+
+            }
+
+            function OnError(err){
+                console.error("Ошибка при выполнении запроса:", err);
+            }
+        });
+    });
+</script>*@
